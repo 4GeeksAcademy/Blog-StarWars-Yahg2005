@@ -1,33 +1,23 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { FavoritesList } from "./favoritesList";
+import { Context } from "../store/appContext";
 
 export const Navbar = () => {
+    const { store } = useContext(Context);
+    const [showFavorites, setShowFavorites] = useState(false);
+
     return (
         <nav className="navbar navbar-light bg-light mb-3">
-            <Link to="/">
-                <span className="navbar-brand mb-0 h1">Star Wars Blog</span>
-            </Link>
-            <div className="ml-auto d-flex align-items-center">
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                        <Link to="/" className="nav-link">Home</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/people" className="nav-link">People</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/planets" className="nav-link">Planets</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/vehicles" className="nav-link">Vehicles</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/favorites" className="nav-link">Favorites</Link>
-                    </li>
-                </ul>
-                <Link to="/demo">
-                    <button className="btn btn-primary ml-2">Check the Context in action</button>
-                </Link>
+            <Link to="/" className="navbar-brand mb-0 h1">Star Wars Blog</Link>
+            <div className="ml-auto position-relative">
+                <button 
+                    className="btn btn-warning" 
+                    onClick={() => setShowFavorites(!showFavorites)}
+                >
+                    Favorites ({store.favorites.length})
+                </button>
+                {showFavorites && <FavoritesList />}
             </div>
         </nav>
     );

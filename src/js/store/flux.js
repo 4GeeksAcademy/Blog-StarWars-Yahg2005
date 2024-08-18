@@ -1,7 +1,6 @@
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
-            demo: [],
             people: [],
             planets: [],
             vehicles: [],
@@ -11,9 +10,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             loadPeople: async () => {
                 try {
                     const response = await fetch("https://swapi.tech/api/people");
-                    if (!response.ok) {
-                        throw new Error("Error fetching people");
-                    }
+                    if (!response.ok) throw new Error("Error fetching people");
                     const data = await response.json();
                     setStore({ people: data.results });
                 } catch (error) {
@@ -23,9 +20,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             loadPlanets: async () => {
                 try {
                     const response = await fetch("https://swapi.tech/api/planets");
-                    if (!response.ok) {
-                        throw new Error("Error fetching planets");
-                    }
+                    if (!response.ok) throw new Error("Error fetching planets");
                     const data = await response.json();
                     setStore({ planets: data.results });
                 } catch (error) {
@@ -35,24 +30,22 @@ const getState = ({ getStore, getActions, setStore }) => {
             loadVehicles: async () => {
                 try {
                     const response = await fetch("https://swapi.tech/api/vehicles");
-                    if (!response.ok) {
-                        throw new Error("Error fetching vehicles");
-                    }
+                    if (!response.ok) throw new Error("Error fetching vehicles");
                     const data = await response.json();
                     setStore({ vehicles: data.results });
                 } catch (error) {
                     console.error("Error loading vehicles:", error);
                 }
             },
-            addFavorite: item => {
+            addFavorite: (item, type) => {
                 const store = getStore();
-                if (!store.favorites.includes(item)) {
-                    setStore({ favorites: [...store.favorites, item] });
+                if (!store.favorites.some(fav => fav.uid === item.uid && fav.type === type)) {
+                    setStore({ favorites: [...store.favorites, { ...item, type }] });
                 }
             },
-            removeFavorite: item => {
+            removeFavorite: (uid, type) => {
                 const store = getStore();
-                setStore({ favorites: store.favorites.filter(fav => fav !== item) });
+                setStore({ favorites: store.favorites.filter(fav => fav.uid !== uid || fav.type !== type) });
             }
         }
     };
